@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const UserModel = require('../data/models/user');
-const { errors } = require('../data/response_codes');
+const codes = require('../data/response_codes');
+const { isValidEmail, isValidNumber } = require('../utils/checkers');
 const { generateToken } = require('../utils/jwt');
 
 async function createUser(req, res) {
@@ -8,27 +9,27 @@ async function createUser(req, res) {
 
     const errs = [];
     if (!document || isNaN(document)) {
-        errs.push(errors.INVALID_DOCUMENT);
+        errs.push(codes.INVALID_DOCUMENT);
     }
     if (!phone || isNaN(phone)) {
-        errs.push(errors.INVALID_PHONE);
+        errs.push(codes.INVALID_PHONE);
     }
     if (!email || !email.includes('@') || !email.includes('.')) {
-        errs.push(errors.INVALID_EMAIL);
+        errs.push(codes.INVALID_EMAIL);
     }
 
     if (name) {
         if (!name.firstname) {
-            errs.push(errors.INVALID_FIRSTNAME);
+            errs.push(codes.INVALID_FIRSTNAME);
         }
         if (!name.lastname) {
-            errs.push(errors.INVALID_LASTNAME);
+            errs.push(codes.INVALID_LASTNAME);
         }
         if (!name.secondlastname) {
-            errs.push(errors.INVALID_SECONDLASTNAME);
+            errs.push(codes.INVALID_SECONDLASTNAME);
         }
     } else {
-        errs.push(errors.INVALID_NAME);
+        errs.push(codes.INVALID_NAME);
     }
 
     if (errs.length > 0) {
@@ -47,10 +48,10 @@ async function createUser(req, res) {
 
     if (exist) {
         if (exist.documento == document) {
-            res.status(400).json({ error: [errors.DOCUMENT_EXISTS] });
+            res.status(400).json({ error: [codes.DOCUMENT_EXISTS] });
             return;
         } else if (exist.correo == email) {
-            res.status(400).json({ error: [errors.EMAIL_EXISTS] });
+            res.status(400).json({ error: [codes.EMAIL_EXISTS] });
         }
     }
 
@@ -69,4 +70,39 @@ async function createUser(req, res) {
     res.status(201).json({ token });
 }
 
-module.exports = { createUser };
+async function loginUser(req, res) {
+    const { email, document } = req.body;
+
+    const errs = [];
+    if (!isValidEmail(email)) {
+        errs.push(codes.INVALID_EMAIL);
+    }
+
+    if (!isValidNumber(document)) {
+        errs.push(codes.INVALID_DOCUMENT);
+    }
+
+    if (errs.length > 0) {
+        res.status(400).json({ errors: errs });
+        return;
+    }
+
+    const user = await UserModel.findOne({
+        where: {
+            [Op.and]: [
+                { correo: email },
+                { documento: document }
+            ]
+        }
+    });
+    if (!user) {
+        res.status(400).json({ error: codes.USER_NOT_EXISTS });
+        return;
+    }
+
+    const token = generateToken(user.id);
+
+    res.status(200).json({ ...codes.USER_LOGGED_SUCCESS, token });
+}
+
+module.exports = { createUser, loginUser };
