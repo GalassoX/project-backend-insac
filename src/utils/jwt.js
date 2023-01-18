@@ -1,5 +1,5 @@
 const { sign, decode } = require('jsonwebtoken');
-const { SECRET_TOKEN } = require('../data/constants');
+const { SECRET_TOKEN, HEADER_AUTH_KEY } = require('../data/constants');
 const { errors } = require('../data/response_codes');
 
 function generateToken(id) {
@@ -13,7 +13,7 @@ function getUserByToken(token) {
 }
 
 function hasToken(req, res, next) {
-    req.headers.authorization
+    req.headers[HEADER_AUTH_KEY]
         ? next()
         : res.status(401).json({ error: errors.UNAUTHORIZED });
 }
