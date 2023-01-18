@@ -1,6 +1,6 @@
 const { sign, decode } = require('jsonwebtoken');
 const { SECRET_TOKEN, HEADER_AUTH_KEY } = require('../data/constants');
-const { errors } = require('../data/response_codes');
+const codes = require('../data/response_codes');
 
 function generateToken(id) {
     const token = sign({ ID: id }, SECRET_TOKEN, { algorithm: 'HS256' });
@@ -13,9 +13,10 @@ function getUserByToken(token) {
 }
 
 function hasToken(req, res, next) {
+    console.log(req.headers[HEADER_AUTH_KEY])
     req.headers[HEADER_AUTH_KEY]
         ? next()
-        : res.status(401).json({ error: errors.UNAUTHORIZED });
+        : res.status(401).json({ error: codes.UNAUTHORIZED });
 }
 
 module.exports = { generateToken, getUserByToken, hasToken };
