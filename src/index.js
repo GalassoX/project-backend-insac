@@ -1,5 +1,7 @@
 const express = require('express');
 const { PORT } = require('./data/constants');
+const userRoutes = require('./routes/user.routes');
+const { connectDB } = require('./utils/database');
 
 const app = express();
 
@@ -7,6 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.listen(PORT, () => {
+
+// Routes
+app.use('/users', userRoutes);
+
+app.listen(PORT, async () => {
+    await connectDB();
     console.log(`Server started in port: ${PORT}`);
 });
