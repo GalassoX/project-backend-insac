@@ -8,13 +8,13 @@ async function createUser(req, res) {
     const { document, name, phone, email } = req.body;
 
     const errs = [];
-    if (!document || isNaN(document)) {
+    if (!isValidNumber(document)) {
         errs.push(codes.INVALID_DOCUMENT);
     }
-    if (!phone || isNaN(phone)) {
+    if (!isValidNumber(phone)) {
         errs.push(codes.INVALID_PHONE);
     }
-    if (!email || !email.includes('@') || !email.includes('.')) {
+    if (!isValidEmail(email)) {
         errs.push(codes.INVALID_EMAIL);
     }
 
