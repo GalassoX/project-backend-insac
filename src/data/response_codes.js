@@ -55,5 +55,21 @@ module.exports = {
     INVALID_AUTH_TOKEN: {
         id: 13,
         code: 'INVALID_AUTH_TOKEN'
+    },
+    INVALID_ADDRESS: {
+        id: 14,
+        code: 'INVALID_ADDRESS'
+    },
+    BUSINESS_CREATED: {
+        id: 15,
+        code: 'BUSINESS_CREATED'
+    },
+    INVALID_ID: {
+        id: 16,
+        code: 'INVALID_ID'
+    },
+    BUSINESS_DELETED: {
+        id: 17,
+        code: 'BUSINESS_DELETED'
     }
 };
