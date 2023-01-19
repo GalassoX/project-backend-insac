@@ -39,7 +39,7 @@ async function createUser(req, res) {
 
     const exist = await UserModel.findOne({
         where: {
-            [Op.and]: [
+            [Op.or]: [
                 { correo: email },
                 { documento: document }
             ]
@@ -48,10 +48,13 @@ async function createUser(req, res) {
 
     if (exist) {
         if (exist.documento == document) {
-            res.status(400).json({ error: [codes.DOCUMENT_EXISTS] });
-            return;
-        } else if (exist.correo == email) {
-            res.status(400).json({ error: [codes.EMAIL_EXISTS] });
+            errs.push(codes.DOCUMENT_EXISTS);
+        }
+        if (exist.correo == email) {
+            errs.push(codes.EMAIL_EXISTS);
+        }
+        if (errs.length > 0) {
+            return res.status(400).json({ error: errs });
         }
     }
 
