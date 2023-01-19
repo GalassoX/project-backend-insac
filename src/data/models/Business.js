@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { db } = require("../../utils/database");
+const UserModel = require("./user");
 
 const BusinessModel = db.define('Business', {
     nombre: {
@@ -16,6 +17,14 @@ const BusinessModel = db.define('Business', {
     },
     correo: {
         type: DataTypes.TEXT,
+        allowNull: false
+    },
+    propietario: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: UserModel,
+            key: 'ID'
+        },
         allowNull: false
     }
 }, {
