@@ -13,7 +13,6 @@ function getUserByToken(token) {
 }
 
 function hasToken(req, res, next) {
-    console.log(req.headers[HEADER_AUTH_KEY])
     req.headers[HEADER_AUTH_KEY]
         ? next()
         : res.status(401).json({ error: codes.UNAUTHORIZED });
