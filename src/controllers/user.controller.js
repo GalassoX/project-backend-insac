@@ -1,7 +1,8 @@
 const { HEADER_AUTH_KEY } = require("../data/constants");
+const BusinessModel = require("../data/models/Business");
 const UserModel = require("../data/models/user");
-const UserBusinessModel = require("../data/models/UserBusiness");
 const codes = require("../data/response_codes");
+const { parseBusiness } = require("../utils/business");
 const { getUserByToken } = require("../utils/jwt");
 
 async function getUser(req, res) {
@@ -18,13 +19,19 @@ async function getUser(req, res) {
         return;
     }
 
-    const userBusiness = await UserBusinessModel.findAll({
+    const userBusiness = await BusinessModel.findAll({
         where: {
-            id_usuario: user.id
+            propietario: user.id
         }
     });
 
-    res.status(200).json(userBusiness);
+    res.status(200).json({
+        response: codes.USER_FOUND,
+        user: {
+            ...user.dataValues,
+            business: parseBusiness(userBusiness)
+        }
+    });
 }
 
 module.exports = { getUser };

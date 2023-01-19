@@ -79,5 +79,9 @@ module.exports = {
     BUSINESS_FOUND: {
         id: 19,
         code: 'BUSINESS_FOUND'
+    },
+    USER_FOUND: {
+        id: 20,
+        code: 'USER_FOUND'
     }
 };
