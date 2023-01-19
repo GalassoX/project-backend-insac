@@ -52,4 +52,8 @@ module.exports = {
         id: 12,
         code: 'USER_LOGGED_SUCCESS'
     },
+    INVALID_AUTH_TOKEN: {
+        id: 13,
+        code: 'INVALID_AUTH_TOKEN'
+    }
 };
