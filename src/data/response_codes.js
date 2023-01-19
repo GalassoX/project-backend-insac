@@ -71,5 +71,13 @@ module.exports = {
     BUSINESS_DELETED: {
         id: 17,
         code: 'BUSINESS_DELETED'
+    },
+    BUSINESS_NOT_FOUND: {
+        id: 18,
+        code: 'BUSINESS_NOT_FOUND'
+    },
+    BUSINESS_FOUND: {
+        id: 19,
+        code: 'BUSINESS_FOUND'
     }
 };

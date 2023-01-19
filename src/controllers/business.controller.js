@@ -7,6 +7,35 @@ const codes = require("../data/response_codes");
 const { isValidEmail, isValidNumber } = require("../utils/checkers");
 const { getUserByToken } = require("../utils/jwt");
 
+async function getBusiness(req, res) {
+    const { id } = req.params;
+
+    if (!id) {
+        res.status(400).json({ error: codes.INVALID_ID });
+        return;
+    }
+
+    const token = getUserByToken(req.headers[HEADER_AUTH_KEY]);
+
+    const user = await UserModel.findOne({
+        where: {
+            id: token.ID
+        }
+    });
+
+    if (!user) {
+        res.status(401).json({ error: codes.INVALID_AUTH_TOKEN });
+        return;
+    }
+
+    const business = await BusinessModel.findOne({ where: { id: id } });
+
+    res.status(200).json(!business
+        ? { response: codes.BUSINESS_NOT_FOUND }
+        : { response: codes.BUSINESS_FOUND, business }
+    );
+}
+
 async function createBusiness(req, res) {
     const { name, address, phone, email } = req.body;
 
@@ -51,7 +80,8 @@ async function createBusiness(req, res) {
         nombre: name,
         direccion: address,
         celular: phone,
-        correo: email
+        correo: email,
+        propietario: user.id
     });
     await UserBusinessModel.create({ id_usuario: user.id, id_negocio: business.id });
 
@@ -96,4 +126,4 @@ async function deleteBusiness(req, res) {
     res.status(200).json({ ...codes.BUSINESS_DELETED, message: 'Negocio eliminado correctamente.' });
 }
 
-module.exports = { createBusiness, deleteBusiness };
+module.exports = { getBusiness, createBusiness, deleteBusiness };
