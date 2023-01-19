@@ -85,7 +85,7 @@ async function createBusiness(req, res) {
     });
     await UserBusinessModel.create({ id_usuario: user.id, id_negocio: business.id });
 
-    res.status(201).json({ ...codes.BUSINESS_CREATED, business: business });
+    res.status(201).json({ response: codes.BUSINESS_CREATED, business: business });
 }
 
 async function deleteBusiness(req, res) {
@@ -123,7 +123,7 @@ async function deleteBusiness(req, res) {
     await UserBusinessModel.destroy({ where: { id: exist.id } });
     await BusinessModel.destroy({ where: { id: id } });
 
-    res.status(200).json({ ...codes.BUSINESS_DELETED, message: 'Negocio eliminado correctamente.' });
+    res.status(200).json({ response: codes.BUSINESS_DELETED, message: 'Negocio eliminado correctamente.' });
 }
 
 module.exports = { getBusiness, createBusiness, deleteBusiness };

@@ -83,5 +83,9 @@ module.exports = {
     USER_FOUND: {
         id: 20,
         code: 'USER_FOUND'
+    },
+    USER_REGISTERED: {
+        id: 21,
+        code: 'USER_REGISTERED'
     }
 };

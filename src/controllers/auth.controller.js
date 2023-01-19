@@ -67,7 +67,7 @@ async function createUser(req, res) {
 
     const token = generateToken(user.id);
 
-    res.status(201).json({ token });
+    res.status(201).json({ response: codes.USER_REGISTERED, token });
 }
 
 async function loginUser(req, res) {
@@ -102,7 +102,7 @@ async function loginUser(req, res) {
 
     const token = generateToken(user.id);
 
-    res.status(200).json({ ...codes.USER_LOGGED_SUCCESS, token });
+    res.status(200).json({ response: codes.USER_LOGGED_SUCCESS, token });
 }
 
 module.exports = { createUser, loginUser };
